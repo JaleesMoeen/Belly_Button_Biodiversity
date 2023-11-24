@@ -1,76 +1,51 @@
+let url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json";
 
-
-
-let url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
-
-
-// for drop down menu
-function dropDown (){
+// No. 1 Defines the function to create the Dashboard activities
+function initDashboard() {
     
-    let dropDownMenu = d3.select( "#selDataset" )
+    var dropdown = d3.select("#selDataset")
     
-    d3.json(url).then((data) => {
-    
-        console.log(data.names);
+    d3.json(url).then(data => {
 
-
-        let names = data.names;
-
-
-
-        names.forEach((sample) => {
-            dropDownMenu
-                .append("option")
-                .text(sample)
-                .property("value", sample);
+        var patientIDs = data.names;
+        patientIDs.forEach(patientID => {
+            dropdown.append("option").text(patientID).property("value", patientID)
         });
-        demographicTable ( names[0])
+        // Calling the function to populate Demographic Info
+        populateDemoInfo(patientIDs[0]);
+    });
+}
+
+// Callling the function for Dashboard
+initDashboard();
 
 
+
+// No. 2 Defines he function to populate Demographic Info
+function populateDemoInfo(patientID){
+    var demographicInfoBox = d3.select("#sample-metadata");
+
+    d3.json(url).then(data =>{
+        var metadata = data.metadata
+        var filteredMetadata = metadata.filter( bacteriaInfo => bacteriaInfo.id == patientID)[0]
+        console.log(filteredMetadata)
+    
+    // Clear the previous data
+    demographicInfoBox.html("");
+     Object.entries(filteredMetadata).forEach(([key, value]) => {
+        demographicInfoBox.append("p").text(`${key}: ${value}`)
+    })
 });
-
-
 }
 
 
 
-dropDown ()
+// No. 3 Defines the function for OptionChaged 
+function optionChanged(patientID) {
+    console.log(patientID);
+    // buildBarChart(patientID);
+    // buildBubbleChart(patientID);
+    // buildGuageChart(patientID);
 
-//Option changed 
-function optionChanged( sample_id ){
-
-demographicTable ( sample_id)
-
-
-}
-
-function demographicTable ( sample_id){
-    
-    let demographic_table_data  = d3.select( "#sample-metadata" )
-    
-    d3.json(url).then((data) => {
-    
-        let metadata = data.metadata;
-        let metadata_Array = metadata.filter(x => x.id == sample_id) [0];
-        
-        console.log(metadata_Array);
-
-        demographic_table_data.html("") 
-        
-        // Prints key pair values using forEach
-    Object.entries(metadata_Array).forEach(entry => {
-    const [key, value] = entry;
-    console.log(key, value);
- 
-    demographic_table_data
-    .append("h5")
-    .text(`${key}: ${value} `)
- 
-});
-
-
-
-});
-
-
+    populateDemoInfo(patientID);
 }
