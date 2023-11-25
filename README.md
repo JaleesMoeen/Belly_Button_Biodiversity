@@ -84,7 +84,7 @@ Select an individual sample from the dropdown menu to explore its data. The dash
 
 ### 8 Deployment
 
-This dashboard is deployed on [GitHub Pages]().
+This dashboard is deployed on [GitHub Pages](https://jaleesmoeen.github.io/Belly_Button_Biodiversity/).
 
 
 ## Author
